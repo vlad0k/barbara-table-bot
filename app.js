@@ -174,6 +174,7 @@ BarbaraTableBot.on('callback_query', (cb) => {
   BarbaraTableBot.answerCallbackQuery(cb.id);
 });
 
+
 function unique(arr) {
   var obj = {};
 
