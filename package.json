@@ -1,0 +1,21 @@
+{
+  "name": "table_bot",
+  "version": "1.0.0",
+  "description": "Teble reservation for Barbara Loubge ",
+  "main": "app.js",
+  "scripts": {
+    "test": "test.js",
+    "start": "nodemon app.js"
+  },
+  "author": "____",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "node-telegram-bot-api": "^0.30.0",
+    "sqlite3": "^4.0.6"
+  },
+  "engines": {
+    "node": "^8.9.4"
+  }
+}
