@@ -1,6 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs')
-
+// egd
 require('./reserve-table/server');
 
 const tables = require('./tables/tables');
