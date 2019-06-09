@@ -25,10 +25,10 @@ const BarbaraTableBot = new TelegramBot(token,
 );
 
 BarbaraTableBot.on('message', (msg) =>{
-  // BarbaraTableBot.deleteMessage(msg.from.id, msg.message_id);
+
   const chatId = msg.chat.id;
+
   if (msg.text == "/start") {
-    console.log(msg.from);
     state[msg.from.id] = {};
     state[chatId] = {
       id: chatId,
@@ -36,34 +36,41 @@ BarbaraTableBot.on('message', (msg) =>{
       activeSession: true,
       username: msg.chat.username
     }
+
     BarbaraTableBot.sendMessage(chatId, "Нажмите кнопку что-бы зарезервировать столик", button.reserve);
-    return
+    return;
   }
+
   if (msg.text.match(/^.{0}\d{1,2}\:{1}\d\d.{0}$/) != null && state[msg.from.id].getTime){
+
     saveTime(BarbaraTableBot, msg, state);
+
     if (state[msg.from.id].time[0] < 16  && state[msg.from.id].time[0] != 0 ) {
       BarbaraTableBot.sendMessage(msg.from.id, "Извините, но мы работаем с 16:00 до 01:00. Напишите другое время");
       state[msg.from.id].getTime = true;
       return;
     }
+
     sendTableChoose(BarbaraTableBot, msg, state);
     return;
+
   }
+
   if((msg.text.match(/^.{0}(\+{0,1}38){0,1}\s{0,1}\({0,1}\d{3}\){0,1}\s{0,1}\-{0,1}\s{0,1}\d{3}\-{0,1}\s{0,1}\d{2}\s{0,1}\s{0,1}\-{0,1}\d{2}.{0}$/) != null) && state[msg.from.id].askNum){
     state[msg.from.id].tel = msg.text;
-    console.log(state[msg.from.id].tel);
     state[msg.from.id].askNum = false;
     state[msg.from.id].askNumOfPeople = true;
     BarbaraTableBot.sendMessage(msg.from.id, "На сколько человек столик?");
     return;
   }
+
   if((msg.text.match(/^.{0}\d{1,2}.{0}$/) != null) && state[msg.from.id].askNumOfPeople){
     state[msg.from.id].numOfPeople = msg.text;
-    console.log(msg.text);
     state[msg.from.id].askNumOfPeople = false;
     askTime(BarbaraTableBot, msg, state);
     return;
   }
+
   deleteReserve(BarbaraTableBot, msg);
   check(BarbaraTableBot, msg, admins);
   help(BarbaraTableBot, msg, admins);
@@ -117,22 +124,20 @@ BarbaraTableBot.on('callback_query', (cb) => {
       tel: state[callBack.guestId].tel,
       numOfPeople: state[callBack.guestId].numOfPeople
     }
+
     var allReserves = JSON.parse(fs.readFileSync('./reserve/reserve.json'));
     allReserves.push(reserveInfo);
     fs.writeFileSync('./reserve/reserve.json', JSON.stringify(allReserves));
+
     var tables = JSON.parse(fs.readFileSync('./tables/tables.json'));
-    // tables[Number(cb.data) - 1].endTime.push(Number(state[cb.from.id].time[0]) * 60 + state[cb.from.id].time[1] + 120);
-    // tables[Number(cb.data) - 1].endTime.sort((a, b) => {
-    //   return a - b;
-    // });
-    // unique(tables[Number(cb.data) - 1].endTime);
     var newTime = Number(state[callBack.guestId].time[0]) * 60 +  Number(state[callBack.guestId].time[1]) + 120;
     tables[Number(state[callBack.guestId].table) - 1].endTime.push(newTime);
     tables[Number(state[callBack.guestId].table) - 1].endTime.sort((a, b) => {
       return a - b;
     });
+
     unique(tables[Number(state[callBack.guestId].table) - 1].endTime);
-    console.log(tables[Number(state[callBack.guestId].table) - 1].endTime);
+
     fs.writeFileSync('./tables/tables.json', JSON.stringify(tables));
     BarbaraTableBot.sendMessage(callBack.guestId, `Бронь подтверждена, ждем Вас к ${state[callBack.guestId].time[0]}:${state[callBack.guestId].time[1]}`);
     BarbaraTableBot.sendMessage(callBack.guestId, 'Напишите /start что-бы забронировать');
@@ -149,7 +154,6 @@ BarbaraTableBot.on('callback_query', (cb) => {
 
       }),
     };
-    console.log(cb.guestId, cb.from.id);
     BarbaraTableBot.sendMessage(callBack.guestId, `Связаться с Вами по номеру ${state[callBack.guestId].tel}?`, telAsk);
   }
 
@@ -185,8 +189,3 @@ function unique(arr) {
 
   return Object.keys(obj); // или собрать ключи перебором для IE8-
 }
-// setInterval(
-//   () => {
-//     BarbaraTableBot.sendMessage('409188474', "Владос, привет")
-//   }, 2000
-// );

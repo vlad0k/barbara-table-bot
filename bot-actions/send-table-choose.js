@@ -19,8 +19,6 @@ function sendTableChoose(BarbaraTableBot, msg, state) {
 function getFreeTables(msg, state) {
   var tables = JSON.parse(fs.readFileSync('./tables/tables.json'));
 
-  console.log(tables);
-
   var buttons = [];
   tables.forEach((elem, i) => {
     stateTime = Number(state[msg.from.id].time[0]) * 60 + Number(state[msg.from.id].time[1]);

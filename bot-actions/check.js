@@ -10,7 +10,6 @@ function check(BarbaraTableBot, msg, admins) {
   if (msg.text == '/check' && isAdmin) {
     var allReserves = JSON.parse(fs.readFileSync('./reserve/reserve.json'));
     var message = '';
-    console.log('+');
     for (i in allReserves) {
       message += 'Столик: ' + allReserves[i].table + ',\n';
       message += 'Имя: ' + allReserves[i].name + ',\n';

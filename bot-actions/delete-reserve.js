@@ -24,41 +24,27 @@ function deleteReserve(BarbaraTableBot, msg) {
         fs.writeFileSync('./reserve/reserve.json', '[]');
       }
     }
-    console.log(message[1]);
     if (message[1].match(/\d/) != null) {
-      console.log('-');
       if (message[2] == 'all') {
-        console.log('+');
         tables[Number(message[1]) - 1].endTime = [];
-        console.log(allReserves);
         for (let i in allReserves) {
           if (allReserves[i].table != message[1]) {
             tempReserves.push(allReserves[i]);
-            console.log('+++');
           }
         }
-        console.log(tempReserves);
-        console.log('++++');
         fs.writeFileSync('./reserve/reserve.json', JSON.stringify(tempReserves));
         BarbaraTableBot.sendMessage(msg.from.id, `Все брони с ${message[1]}го столика удалены`);
       }
       if(message[2].match(/^.{0}\d{1,2}\:\d{2}.{0}$/) != null) {
-        console.log('time');
-        // if (tables[Number(message[1]) - 1].endTime.length == 0){
-        //   return;
-        // }
         var timeArr = message[2].split(':');
         var time = Number(timeArr[0]) * 60 + Number(timeArr[1]) + 120;
-        console.log(allReserves , message[2]);
+
         for (let i in allReserves) {
           if (allReserves[i].time == message[2]) {
-
             allReserves.splice(i,1);
-            console.log('+++');
           }
         }
-        console.log(allReserves);
-        console.log('++++');
+
         fs.writeFileSync('./reserve/reserve.json', JSON.stringify(allReserves));
         var position = tables[Number(message[1]) - 1].endTime.indexOf(time);
         if ( ~position ) tables[Number(message[1]) - 1].endTime.splice(position, 1);
